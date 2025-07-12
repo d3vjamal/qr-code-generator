@@ -1,0 +1,49 @@
+.qr-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 0.5rem;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon svg {
+    position: absolute;
+    left: 10px;
+    color: #888;
+}
+
+.input-with-icon input {
+    padding-left: 35px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+}
