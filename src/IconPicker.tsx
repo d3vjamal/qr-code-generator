@@ -44,7 +44,7 @@ const IconPicker: React.FC<IconPickerProps> = ({ t, selectedIcon, setSelectedIco
                             src={icon}
                             sx={{
                                 cursor: 'pointer',
-                                border: selectedIcon === icon ? '2px solid #007bff' : '2px solid transparent',
+                                border: selectedIcon === icon ? '2px solid #00a5f1' : '2px solid transparent',
                             }}
                             onClick={() => handleIconClick(icon)}
                         />
@@ -56,7 +56,7 @@ const IconPicker: React.FC<IconPickerProps> = ({ t, selectedIcon, setSelectedIco
                         component="label"
                         startIcon={<Upload />}
                     >
-                        {t('uploadIcon')}
+                        {t('upload Icon')}
                         <input type="file" hidden onChange={handleFileUpload} accept="image/*" />
                     </Button>
                 </Grid>

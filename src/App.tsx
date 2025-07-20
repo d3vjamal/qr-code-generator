@@ -7,7 +7,7 @@ type TranslationDict = {
 };
 const TRANSLATIONS_TYPED: TranslationDict = TRANSLATIONS;
 import { Link, MessageSquare, User, Heart, CreditCard, Wifi, MessageCircle } from 'lucide-react';
-import { Container, Box, Typography, Tabs, Tab, Paper, Grid } from '@mui/material';
+import { Container, Box, Typography, Tabs, Tab, Paper, Grid, Button } from '@mui/material';
 import './custom-styles.css';
 import QrUrlForm from './QrUrlForm';
 import QrTextForm from './QrTextForm';
@@ -21,6 +21,7 @@ import AppearanceSettings from './AppearanceSettings';
 import Header from './Header';
 import IconPicker from './IconPicker';
 import QRCodeStyling from 'qr-code-styling';
+import AboutMePage from './AboutMePage';
 
 interface WhatsappInfo {
     phone: string;
@@ -53,6 +54,7 @@ interface UPIInfo {
 const QRCodeGenerator: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>('url');
     const [qrData, setQrData] = useState<string>('');
+    const [showAboutPage, setShowAboutPage] = useState<boolean>(false);
     const [copied, setCopied] = useState<boolean>(false);
     const [locale, setLocale] = useState<string>('en-US');
     const qrContainerRef = useRef<HTMLDivElement>(null);
@@ -299,13 +301,14 @@ END:VCARD`;
         setUpiInfo({ ...upiInfo, amount: cleaned });
     };
 
+    const primaryIconStyle = { color: '#00a5f1' };
     const tabs = [
-        { id: 'url', label: t('urlTab'), icon: <Link /> },
-        { id: 'text', label: t('textTab'), icon: <MessageSquare /> },
-        { id: 'contact', label: t('contactTab'), icon: <User /> },
-        { id: 'upi', label: t('upiTab'), icon: <CreditCard /> },
-        { id: 'wifi', label: t('wifiTab'), icon: <Wifi /> },
-        { id: 'whatsapp', label: t('whatsappTab'), icon: <MessageCircle /> }
+        { id: 'url', label: t('urlTab'), icon: <Link style={primaryIconStyle} /> },
+        { id: 'text', label: t('textTab'), icon: <MessageSquare style={primaryIconStyle} /> },
+        { id: 'contact', label: t('contactTab'), icon: <User style={primaryIconStyle} /> },
+        { id: 'upi', label: t('upiTab'), icon: <CreditCard style={primaryIconStyle} /> },
+        { id: 'wifi', label: t('wifiTab'), icon: <Wifi style={primaryIconStyle} /> },
+        { id: 'whatsapp', label: t('whatsappTab'), icon: <MessageCircle style={primaryIconStyle} /> }
     ];
 
 
@@ -313,137 +316,144 @@ END:VCARD`;
         <Box sx={{ minHeight: '100vh', background: 'linear-gradient(to br, #f3e5f5, #e3f2fd, #e8eaf6)' }}>
             <Header locale={locale} setLocale={setLocale} t={t} />
             <Container maxWidth="lg" sx={{ p: { xs: 1, sm: 2, md: 4 } }}>
-                <Box sx={{ textAlign: 'center', my: { xs: 2, sm: 4, md: 6 } }}>
-                    <Typography variant="h3" component="h1" sx={{
-                        fontWeight: 'bold',
-                        mb: 2,
-                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-                        color: '#222',
-                        letterSpacing: 0.5,
-                        lineHeight: 1.1
-                    }}>
-                        {renderAppTitle()}
-                    </Typography>
-                    <Typography variant="h6" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' } }}>
-                        {t('appDescription')}
-                    </Typography>
-                </Box>
-
-                <Paper elevation={8} sx={{ borderRadius: { xs: 2, md: 5 }, overflow: 'hidden' }}>
-                    <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
-                        <Grid container spacing={3} alignItems="stretch">
-                            {/* Form and Settings */}
-                            <Grid item xs={12} lg={7} order={{ xs: 1, lg: 1 }} display="flex" flexDirection="column">
-                                <Tabs
-                                    value={activeTab}
-                                    onChange={(_, newValue) => setActiveTab(newValue)}
-                                    variant="scrollable"
-                                    scrollButtons="auto"
-                                    allowScrollButtonsMobile
-                                    indicatorColor="primary"
-                                    textColor="primary"
-                                    sx={{
-                                        '.MuiTab-root': {
-                                            minWidth: { xs: 'auto', sm: '120px' },
-                                            fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                                        }
-                                    }}
-                                >
-                                    {tabs.map((tab) => (
-                                        <Tab key={tab.id} value={tab.id} label={tab.label} icon={tab.icon} iconPosition="start" />
-                                    ))}
-                                </Tabs>
-                                <Box sx={{ mt: { xs: 2, md: 2 } }}>
-                                    {activeTab === 'url' && <QrUrlForm t={t} urlInput={urlInput} setUrlInput={setUrlInput} />}
-                                    {activeTab === 'text' && <QrTextForm t={t} textInput={textInput} setTextInput={setTextInput} />}
-                                    {activeTab === 'contact' && <QrContactForm t={t} contactInfo={contactInfo} setContactInfo={setContactInfo} />}
-                                    {activeTab === 'upi' && <QrUpiForm t={t} upiInfo={upiInfo} setUpiInfo={setUpiInfo} validateUpiId={validateUpiId} validateAmount={validateAmount} handleAmountChange={handleAmountChange} />}
-                                    {activeTab === 'wifi' && <QrWifiForm t={t} wifiInfo={wifiInfo} setWifiInfo={setWifiInfo} />}
-                                    {activeTab === 'whatsapp' && <QrWhatsappForm t={t} whatsappInfo={whatsappInfo} setWhatsappInfo={setWhatsappInfo} />}
-                                </Box>
-                                {/* ColorPicker will be rendered below QR code on mobile, here only for desktop */}
-                                <Box
-                                    mt={{ xs: 0, md: 4 }}
-                                    sx={{
-                                        display: { xs: 'none', md: 'block' },
-                                        maxWidth: { md: 450 },
-                                        mx: { md: 5 },
-                                        mb: { md: 0 },
-                                        zIndex: 1,
-                                        position: 'relative',
-                                    }}
-                                >
-                                    <ColorPicker
-                                        t={t}
-                                        foregroundColor={foregroundColor}
-                                        setForegroundColor={setForegroundColor}
-                                        backgroundColor={backgroundColor}
-                                        setBackgroundColor={setBackgroundColor}
-                                    />
-                                </Box>
-                                <Box mt={{ xs: 2, md: 4 }}>
-                                    <AppearanceSettings
-                                        t={t}
-                                        size={size}
-                                        setSize={setSize}
-                                        level={level}
-                                        setLevel={setLevel}
-                                    />
-                                </Box>
-                                <Box mt={{ xs: 2, md: 4 }}>
-                                    <IconPicker
-                                        t={t}
-                                        selectedIcon={selectedIcon}
-                                        setSelectedIcon={setSelectedIcon}
-                                    />
-                                </Box>
-                            </Grid>
-                            {/* QR Code Display */}
-                            <Grid item xs={12} lg={5} order={{ xs: 2, lg: 2 }} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                                <QrCodeDisplay
-                                    qrData={qrData}
-                                    qrRef={qrContainerRef}
-                                    onDownload={downloadQRCode}
-                                    onCopy={copyToClipboard}
-                                    copied={copied}
-                                    t={t}
-                                />
-                                {/* ColorPicker for mobile, below QR code */}
-                                <Box
-                                    mt={2}
-                                    sx={{
-                                        display: { xs: 'block', md: 'none' },
-                                        width: '100%',
-                                        maxWidth: 320,
-                                        mx: 'auto',
-                                        zIndex: 1,
-                                        position: 'relative',
-                                    }}
-                                >
-                                    <ColorPicker
-                                        t={t}
-                                        foregroundColor={foregroundColor}
-                                        setForegroundColor={setForegroundColor}
-                                        backgroundColor={backgroundColor}
-                                        setBackgroundColor={setBackgroundColor}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
+                {showAboutPage ? (
+                    <Box>
+                        <Button variant="contained" onClick={() => setShowAboutPage(false)} sx={{ mb: 2 }}>
+                            {t('back')}
+                        </Button>
+                        <AboutMePage />
                     </Box>
-                </Paper>
+                ) : (
+                    <>
+                        <Box sx={{ textAlign: 'center', my: { xs: 2, sm: 4, md: 6 } }}>
+                            <Typography variant="h3" component="h1" sx={{
+                                fontWeight: 'bold',
+                                mb: 2,
+                                fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                                color: '#222',
+                                letterSpacing: 0.5,
+                                lineHeight: 1.1
+                            }}>
+                                {renderAppTitle()}
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' } }}>
+                                {t('appDescription')}
+                            </Typography>
+                        </Box>
+
+                        <Paper elevation={8} sx={{ borderRadius: { xs: 2, md: 5 }, overflow: 'hidden' }}>
+                            <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+                                <Grid container spacing={3} alignItems="stretch">
+                                    {/* Form and Settings */}
+                                    <Grid item xs={12} lg={7} order={{ xs: 1, lg: 1 }} display="flex" flexDirection="column">
+                                        <Tabs
+                                            value={activeTab}
+                                            onChange={(_, newValue) => setActiveTab(newValue)}
+                                            variant="scrollable"
+                                            scrollButtons="auto"
+                                            allowScrollButtonsMobile
+                                            indicatorColor="primary"
+                                            textColor="primary"
+                                            sx={{
+                                                '.MuiTab-root': {
+                                                    minWidth: { xs: 'auto', sm: '120px' },
+                                                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                                                }
+                                            }}
+                                        >
+                                            {tabs.map((tab) => (
+                                                <Tab key={tab.id} value={tab.id} label={tab.label} icon={tab.icon} iconPosition="start" />
+                                            ))}
+                                        </Tabs>
+                                        <Box sx={{ mt: { xs: 2, md: 2 } }}>
+                                            {activeTab === 'url' && <QrUrlForm t={t} urlInput={urlInput} setUrlInput={setUrlInput} />}
+                                            {activeTab === 'text' && <QrTextForm t={t} textInput={textInput} setTextInput={setTextInput} />}
+                                            {activeTab === 'contact' && <QrContactForm t={t} contactInfo={contactInfo} setContactInfo={setContactInfo} />}
+                                            {activeTab === 'upi' && <QrUpiForm t={t} upiInfo={upiInfo} setUpiInfo={setUpiInfo} validateUpiId={validateUpiId} validateAmount={validateAmount} handleAmountChange={handleAmountChange} />}
+                                            {activeTab === 'wifi' && <QrWifiForm t={t} wifiInfo={wifiInfo} setWifiInfo={setWifiInfo} />}
+                                            {activeTab === 'whatsapp' && <QrWhatsappForm t={t} whatsappInfo={whatsappInfo} setWhatsappInfo={setWhatsappInfo} />}
+                                        </Box>
+                                        {/* ColorPicker will be rendered below QR code on mobile, here only for desktop */}
+                                        <Box
+                                            mt={{ xs: 0, md: 4 }}
+                                            sx={{
+                                                display: { xs: 'none', md: 'block' },
+                                                maxWidth: { md: 450 },
+                                                mx: { md: 5 },
+                                                mb: { md: 0 },
+                                                zIndex: 1,
+                                                position: 'relative',
+                                            }}
+                                        >
+                                            <ColorPicker
+                                                t={t}
+                                                foregroundColor={foregroundColor}
+                                                setForegroundColor={setForegroundColor}
+                                                backgroundColor={backgroundColor}
+                                                setBackgroundColor={setBackgroundColor}
+                                            />
+                                        </Box>
+                                        <Box mt={{ xs: 2, md: 4 }}>
+                                            <AppearanceSettings
+                                                t={t}
+                                                size={size}
+                                                setSize={setSize}
+                                                level={level}
+                                                setLevel={setLevel}
+                                            />
+                                        </Box>
+                                        <Box mt={{ xs: 2, md: 4 }}>
+                                            <IconPicker
+                                                t={t}
+                                                selectedIcon={selectedIcon}
+                                                setSelectedIcon={setSelectedIcon}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                    {/* QR Code Display */}
+                                    <Grid item xs={12} lg={5} order={{ xs: 2, lg: 2 }} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                                        <QrCodeDisplay
+                                            qrData={qrData}
+                                            qrRef={qrContainerRef}
+                                            onDownload={downloadQRCode}
+                                            onCopy={copyToClipboard}
+                                            copied={copied}
+                                            t={t}
+                                        />
+                                        {/* ColorPicker for mobile, below QR code */}
+                                        <Box
+                                            mt={2}
+                                            sx={{
+                                                display: { xs: 'block', md: 'none' },
+                                                width: '100%',
+                                                maxWidth: 320,
+                                                mx: 'auto',
+                                                zIndex: 1,
+                                                position: 'relative',
+                                            }}
+                                        >
+                                            <ColorPicker
+                                                t={t}
+                                                foregroundColor={foregroundColor}
+                                                setForegroundColor={setForegroundColor}
+                                                backgroundColor={backgroundColor}
+                                                setBackgroundColor={setBackgroundColor}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Paper>
+                    </>
+                )}
 
                 {/* Footer with Developer Credit */}
                 <Box sx={{ textAlign: 'center', mt: { xs: 4, md: 6 }, py: 2 }}>
                     <Typography variant="body2">{t('footerText')}</Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, mt: 1 }}>
-                        <Typography variant="body2">{t('developedBy')}</Typography>
-                        <Heart style={{ fontSize: 16, color: 'red' }} /> by
-                        <a href="https://www.linkedin.com/in/d3vjamal" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Typography variant="body2">{t('developerName')}</Typography>
-                        </a>
 
-                    </Box>
+                    <Button variant="text" onClick={() => setShowAboutPage(true)} sx={{ mt: 1 }}>
+                        {t('aboutButton')}
+                    </Button>
                 </Box>
             </Container>
         </Box>

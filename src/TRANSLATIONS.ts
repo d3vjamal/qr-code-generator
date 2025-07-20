@@ -36,13 +36,13 @@ const TRANSLATIONS = {
         "website": "Website",
         "websitePlaceholder": "https://example.com",
         "upiId": "UPI ID",
-        "upiIdPlaceholder": "name@paytm / name@gpay / name@phonepe",
+        "upiIdPlaceholder": "name@paytm / name@gpay / name@ybl",
         "upiIdHelp": "Enter your UPI ID (e.g., name@paytm, name@gpay, name@phonepe)",
         "amount": "Amount (₹)",
         "amountPlaceholder": "100",
         "amountHelp": "Enter amount in rupees (optional)",
         "recipientName": "Recipient Name",
-        "recipientNamePlaceholder": "Rajesh Kumar",
+        "recipientNamePlaceholder": "Jamal Mondal",
         "paymentNote": "Payment Note",
         "paymentNotePlaceholder": "Payment for services",
         "paymentNoteHelp": "Optional note for the payment",
@@ -80,7 +80,8 @@ const TRANSLATIONS = {
         "levelQ": "Quartile",
         "levelH": "High",
         "next": "Next",
-        "back": "Back"
+        "back": "Home",
+        "aboutButton": "About Me"
     },
     "bn-BD": {
         "appHeader": "Easy QR Generator",
@@ -161,7 +162,8 @@ const TRANSLATIONS = {
         "levelQ": "চতুর্থাংশ",
         "levelH": "উচ্চ",
         "next": "পরবর্তী",
-        "back": "ফিরে যান"
+        "back": "ফিরে যান",
+        "aboutButton": "Dev সম্পর্কে"
     }
 };
 
